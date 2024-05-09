@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import pl.umcs.oop.database.DatabaseConnection;
 
@@ -31,6 +32,14 @@ class SongTest {
     @ParameterizedTest
     @MethodSource("songs")
     public void streamTest(int index, String artist, String title, int length) throws SQLException {
+        Optional<Song> song;
+        song = Song.Persistence.read(index);
+        assertEquals(title, song.get().title());
+    }
+
+    @ParameterizedTest
+    @CsvFileSource(files = "songs.csv", numLinesToSkip = 1)
+    public void csvStreamTest(int index, String artist, String title, int length) throws SQLException {
         Optional<Song> song;
         song = Song.Persistence.read(index);
         assertEquals(title, song.get().title());
